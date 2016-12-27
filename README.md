@@ -143,7 +143,16 @@ List of commands those are used during docker execution.
 ############################################################
 
 #### Network Related Commands
-    docker [CMD] [OPTS] [IMAGE]
+    docker network [CMD] [OPTS]
+`Example`
+    
+1. List all networks
+
+    `$docker network ls`
+
+2. Inspect bridge network:
+
+    `$docker network inspect bridge`
     
 | Command | Description |
 | --- | --- |
