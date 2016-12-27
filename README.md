@@ -1,4 +1,7 @@
 ## docker CLI
+
+Acknowledgement: Taken [this guide](https://developers.redhat.com/promotions/docker-cheatsheet/) as a reference. 
+
 List of commands those are used during docker execution.
 
 #### Container Related Commands

@@ -23,6 +23,7 @@ docker volume rm $(docker volume ls -qf dangling=true)
 
 #################################################################
 ####################### RUN : RUN/EXEC ##########################
+#################################################################
 
 docker run CONTAINER_ID
 
@@ -72,7 +73,6 @@ docker images
 ####################### BUILD : BUILD/COMMIT/PUSH ###############
 #################################################################
 
-- commit changes to an image
 docker commit  [image name]
 docker commit -m "Added json gem" -a "Kate Smith" CONTAINER_ID IMAGE_NAME[johnshumon/myapp:v1]
 
@@ -84,6 +84,5 @@ docker build -t="dockerfile/java" github.com/dockerfile/java
 
 docker build -t shykes/myapp:1.0.2 -t shykes/myapp:latest
 
-- PUSH a repository to Docker Hub
 docker push johnshumon/my-python-app
 
