@@ -111,6 +111,8 @@ List of commands those are used during docker execution.
 4. Remove an image from the local registry:
 
     `$ docker rmi [username/]<image-name>[:tag]`
+    `$ docker rmi johnshumon/myimage`
+    `$ docker rmi -f johnshumon/myimage`
     
 5. Tag an image:
     

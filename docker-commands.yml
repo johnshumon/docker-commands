@@ -1,0 +1,89 @@
+#################################################################
+####################### REMOVE : RM/RMI #########################
+#################################################################
+
+docker rm CONTAINER_ID
+
+docker -v CONTAINER_ID
+
+docker rm $(docker ps -a -q)
+docker rm -v $(docker ps -q -a)
+docker rm -v $(docker ps -a -q -f status=exited)
+
+docker rm `docker ps -qa`
+docker rm `docker ps --no-trunc -aq`
+
+docker rmi training/sinatra
+
+docker rmi $(docker images | grep "^<none>" | awk "{print $3}")
+docker rmi `docker images | awk '{ print $3; }'`
+docker rmi $(docker images --filter "dangling=true" -q --no-trunc)
+
+docker volume rm $(docker volume ls -qf dangling=true)
+
+#################################################################
+####################### RUN : RUN/EXEC ##########################
+
+docker run CONTAINER_ID
+
+docker run IMAGE_ID
+
+docker run -it --rm -p 8888:8080 IMAGE_ID
+
+docker run --name any_name -dp 8888:8080 IMAGE_NAME/IAMGE_ID
+docker run --name py-app -dp 9001:5000 myimage
+
+docker run -dp 9000:9000 --privileged -v /var/run/docker.sock:/var/run/docker.sock dockerui/dockerui
+
+docker run -it -p 7100-7120:7100-7120 myimage
+
+docker run -it IMAGE_NAME/IMAGE_ID /bin/sh
+
+
+docker exec -it CONTAINER_ID chown -R apache:apache /var/www/html/myapp
+
+- restart in the backgrounstart  (-l --> last stopped CONTAINER)
+docker start  `docker ps -q -l`
+
+- reattach the terminal & stdin (-l --> last stopped CONTAINER)
+docker attach `docker ps -q -l`
+
+docker cp /etc/yum.repos.d/rhel-source.repo CONTAINER_ID:/etc/yum.repos.d/
+
+#################################################################
+####################### INFO : INFO #############################
+#################################################################
+
+docker -d &
+
+docker ps
+
+docker ps -a
+
+docker inspect IMAGE_NAME/IMAGE_ID
+
+docker history CONTAINER_ID
+
+docker port CONTAINER_ID
+
+docker images
+
+#################################################################
+####################### BUILD : BUILD/COMMIT/PUSH ###############
+#################################################################
+
+- commit changes to an image
+docker commit  [image name]
+docker commit -m "Added json gem" -a "Kate Smith" CONTAINER_ID IMAGE_NAME[johnshumon/myapp:v1]
+
+docker build -t username/IMAGE_NAME:TAG directory
+docker build -t username/IMAGE_NAME:tag -t usernames/SECOND_TAG
+
+- build an image to a specific remote repo
+docker build -t="dockerfile/java" github.com/dockerfile/java
+
+docker build -t shykes/myapp:1.0.2 -t shykes/myapp:latest
+
+- PUSH a repository to Docker Hub
+docker push johnshumon/my-python-app
+
