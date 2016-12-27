@@ -77,6 +77,7 @@ List of commands those are used during docker execution.
     
     `$ docker exec -it mywildfly bash`
     
+############################################################
 
 #### Image Related Commands
     docker [CMD] [OPTS] [IMAGE]
@@ -138,3 +139,18 @@ List of commands those are used during docker execution.
 7. Push an image to a registry:
 
     `$ docker push [registry/][username/]<image-name>[:tag]`
+    
+############################################################
+
+#### Network Related Commands
+    docker [CMD] [OPTS] [IMAGE]
+    
+| Command | Description |
+| --- | --- |
+| `connect` | Connects a container to a network |
+| `create` | Creates a new network with the specified name | 
+| `disconnect` | Disconnects a container from a network |
+| `inspect` | Displays detailed information on a network | 
+| `ls` | Lists all the networks created by the user | 
+| `rm` | Deletes one or more networks | 
+
