@@ -1,0 +1,218 @@
+## GENERIC DOCKER COMPOSE FILE
+
+
+##################################################################
+# docker compose installation                                    #
+##################################################################
+
+curl -L "https://github.com/docker/compose/releases/download/1.9.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+chmod +x /usr/local/bin/docker-compose
+
+
+###################################################################
+# Generic docker compose file which service definition. A service #
+# definition contains configuration which will be applied to each #
+# container started for that services                             #
+###################################################################
+version: '2'
+
+services:
+  web:
+    # build from Dockerfile
+    build: .
+    # build with an alternate dockerfile
+    context: ./dir
+    dockerfile: Dockerfile-alternate
+    args:
+      buildno: 1
+
+
+
+    # build from image
+    image: ubuntu
+    image: ubuntu:14.04
+    image: tutum/influxdb
+    image: example-registry:4000/postgresql
+    image: a4bc65fd
+
+    container_name: anyname
+
+    ports:
+      - "3000"
+      - "8000:80"  # guest:host
+      - "7000-7001:7000-7001"
+
+    # command to execute
+    command: bundle exec thin -p 3000
+    command: [bundle, exec, thin, -p, 3000]
+    command: -server -advertise $CONSUL_ADVERTISE_IP -bootstrap-expect 3 -ui-dir /ui
+
+    # override the entrypoint
+    entrypoint: /app/start.sh
+    entrypoint: [php, -d, vendor/bin/phpunit]
+    entrypoint:
+      - php
+      - -d
+      - zend_extension=/usr/local/lib/php/extensions/no-debug-non-zts-20100525/xdebug.so
+      - -d
+      - memory_limit=-1
+      - vendor/bin/phpunit
+
+    # environment vars
+    environment:
+      RACK_ENV: development
+    environment:
+      - RACK_ENV=development
+
+    # environment vars from file
+    env_file: .env
+    env_file: [.env, .development.env]
+
+    # expose ports to linked services (not to host)
+    expose: ["3000"]
+
+    # make this service extend another
+    extends:
+      file: common.yml  # optional
+      service: webapp
+
+    # makes the `db` service available as the hostname `database`
+    # (implies depends_on)
+    links:
+      - db:database
+      - redis
+
+    # make sure `db` is alive before starting
+    depends_on:
+      - db
+
+    volumes:
+      - /var/lib/mysql
+      - ./_data:/var/lib/mysql
+
+    #volumes from another service or container, optionally specifying read-only access (ro) or read-write (rw). If no access level is specified, then read-write will be used.
+    volumes_from:
+     - service_name
+     - service_name:ro
+     - container:container_name
+     - container:container_name:rw
+
+    restart: always
+    mem_limit: 128m
+    mem_limit: 1000000000
+
+    labels:
+      com.example.description: "Accounting web app"
+
+    # change dns servers
+    dns: 8.8.8.8
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+
+    dns_search: example.com
+    dns_search:
+      - dc1.example.com
+      - dc2.example.com
+
+    devices:
+    - "/dev/ttyUSB0:/dev/ttyUSB0"
+
+    external_links:
+      - redis_1
+      - project_db_1:mysql
+
+    extra_hosts:
+      - "somehost:192.168.1.100"
+
+    security_opt:
+      - label:user:USER
+      - label:role:ROLE
+
+    logging:
+      driver: syslog
+      options:
+        syslog-address: "tcp://192.168.0.42:123"
+
+    ipam:
+      driver: default
+      config:
+        - subnet: 172.28.0.0/16
+          ip_range: 172.28.5.0/24
+          gateway: 172.28.5.254
+          aux_addresses:
+            host1: 172.28.1.5
+            host2: 172.28.1.6
+            host3: 172.28.1.7
+
+    cpu_shares: 73
+    cpu_quota: 50000
+    cpuset: 0,1
+
+    user: postgresql
+    working_dir: /code
+
+    domainname: foo.com
+    hostname: foo
+    ipc: host
+    mac_address: 02:42:ac:11:65:43
+    memswap_limit: 2000000000
+    privileged: true
+
+    oom_score_adj: 500
+
+    read_only: true
+    shm_size: 64M
+    stdin_open: true
+    tty: true
+
+    network_mode: "bridge"
+    network_mode: "host"
+    network_mode: "none"
+    network_mode: "service:[service name]"
+    network_mode: "container:[container name/id]"
+
+    networks:
+      - ttnw
+      - front-tier
+      - back-tier
+
+    networks:
+      app_net:
+        link_local_ips:
+          - 57.123.22.11
+          - 57.123.22.13
+
+networks:
+  ttnw:
+
+  front-tier:
+    driver: bridge
+  back-tier:
+    driver: bridge
+
+  app_net:
+    link_local_ips:
+      driver:bridge
+
+
+##########################
+# docker-compose commands
+##########################
+
+docker-compose start
+docker-compose stop
+
+docker-compose pause
+docker-compose unpause
+
+docker-compose ps
+docker-compose up -d
+docker-compose down
+
+docker-compose -f docker-compose.join-cluster.yml ps
+
+# for continious logs
+docker-compose logs -f
+docker-compose logs
+docker-compose -f docker-compose.join-cluster.yml logs -f
